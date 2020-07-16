@@ -1,0 +1,38 @@
+{
+  "dataset": "TACoS",
+  "gpu": "3",
+  "num_workers": 5,
+  "display_n_batches": 30,
+
+  "save_model": false,
+  "model_save_path": "./save/",
+  "use_pre_train_primary": false,
+  "max_word_num": 20,
+  "max_frame_num": 200,
+  "hidden_dim": 256,
+  "word_dim": 300,
+  "frame_dim": 500,
+  "dropout": 0.1,
+  "batch_size": 64,
+
+  "pre_train_epoch_num": 20,
+  "adversarial_epoch_num": 10,
+  "pre_train_dis_epoch_num": 2,
+
+  "alpha": 1.0,
+  "beta": 0.5,
+  "lambda": 1.0,
+  "mu": 0.5,
+  "nu": 5.0,
+
+  "pre_train_lr": [0.0018],
+  "pre_train_warmup_updates": 600,
+  "pre_train_warmup_init_lr": 0.00005,
+
+  "generator_lr": [6e-8],
+  "generator_warmup_updates": 600,
+  "generator_warmup_init_lr": 1e-8,
+  "discriminator_lr": [8e-4],
+  "discriminator_warmup_updates": 600,
+  "discriminator_warmup_init_lr": 6e-4
+}
