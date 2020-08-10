@@ -16,19 +16,12 @@ code for ***Temporal Textual Localization in Video via Adversarial Bi-Directiona
 
 ## Run
 
-place glove.bin in ./data folder
+1. place glove.bin ([](http://nlp.stanford.edu/data/glove.840B.300d.zip)) in ./data folder
 
-place ActivityNet video features in ./data/ActivityNet/feature folder, which is h5 file
+2. place ActivityNet video features in ./data/ActivityNet/feature folder, which is h5 file
 
-place TACoS video features in ./data/TACoS/feature folder, which is npy file
+3. place TACoS video features in ./data/TACoS/feature folder, which is npy file
 
-modify json file in config folder for experimental setting
+4. (optional) modify json file in config folder for experimental setting
 
-`python main.py`
-
-
-
-
-
-
-
+5. `python main.py`
