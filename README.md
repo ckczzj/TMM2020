@@ -16,7 +16,7 @@ code for ***Temporal Textual Localization in Video via Adversarial Bi-Directiona
 
 ## Run
 
-1. place glove.bin ([](http://nlp.stanford.edu/data/glove.840B.300d.zip)) in ./data folder
+1. place [glove.bin](http://nlp.stanford.edu/data/glove.840B.300d.zip) in ./data folder
 
 2. place ActivityNet video features in ./data/ActivityNet/feature folder, which is h5 file
 
