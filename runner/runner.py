@@ -32,15 +32,37 @@ class Runner:
         self._build_optimizer()
 
     def _get_dataset(self):
-        word2vec = load_word2vec("./data/glove.bin")
+        word2vec = load_word2vec(self.config["word2vec_path"])
         if self.config["dataset"] == 'ActivityNet':
-            train=ActivityNet("./data/ActivityNet/feature","./data/ActivityNet/train_data.json",
-                              word2vec,max_frame_num=self.config["max_frame_num"], max_word_num=self.config["max_word_num"])
-            test=ActivityNet("./data/ActivityNet/feature","./data/ActivityNet/test_data.json",
-                             word2vec,max_frame_num=self.config["max_frame_num"], max_word_num=self.config["max_word_num"])
+            train=ActivityNet(
+                self.config["feature_path"],
+                self.config["train_json"],
+                word2vec,
+                max_frame_num=self.config["max_frame_num"],
+                max_word_num=self.config["max_word_num"]
+            )
+            test=ActivityNet(
+                self.config["feature_path"],
+                self.config["test_json"],
+                word2vec,
+                max_frame_num=self.config["max_frame_num"],
+                max_word_num=self.config["max_word_num"]
+            )
         elif self.config["dataset"] == 'TACoS':
-            train=TACoS("./data/TACoS/feature","./data/TACOS/train_data.json",word2vec,max_frame_num=self.config["max_frame_num"], max_word_num=self.config["max_word_num"])
-            test=TACoS("./data/TACoS/feature","./data/TACOS/test_data.json",word2vec,max_frame_num=self.config["max_frame_num"], max_word_num=self.config["max_word_num"])
+            train=TACoS(
+                self.config["feature_path"],
+                self.config["train_json"],
+                word2vec,
+                max_frame_num=self.config["max_frame_num"],
+                max_word_num=self.config["max_word_num"]
+            )
+            test=TACoS(
+                self.config["feature_path"],
+                self.config["test_json"],
+                word2vec,
+                max_frame_num=self.config["max_frame_num"],
+                max_word_num=self.config["max_word_num"]
+            )
 
         else:
             raise NotImplementedError
@@ -102,7 +124,7 @@ class Runner:
                 self._pre_train_one_epoch(epoch)
                 self.eval()
                 if self.config["save_model"]:
-                    torch.save(self.primary,self.config["model_save_path"]+self.config["dataset"]+'-pre-train-model-'+str(epoch)+'.pth')
+                    torch.save(self.primary,self.config["model_save_path"]+'-pre-train-model-'+str(epoch)+'.pth')
 
         else:
             logging.info('pre-train eval')

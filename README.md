@@ -11,17 +11,20 @@ code for ***Temporal Textual Localization in Video via Adversarial Bi-Directiona
 - PyTorch 1.5+
 - gensim
 - nltk
+- fairseq
 
 
 
 ## Run
 
-1. place [glove.bin](http://nlp.stanford.edu/data/glove.840B.300d.zip) in ./data folder
+1. download and unzip [glove.840B.300d.zip](http://nlp.stanford.edu/data/glove.840B.300d.zip) and place it at ./data/glove.bin
 
-2. place ActivityNet video features in ./data/ActivityNet/feature folder, which is h5 file
-
-3. place TACoS video features in ./data/TACoS/feature folder, which is npy file
+3. download and unzip [TACoS_feature.zip](https://drive.google.com/file/d/1B0blGPXmmgyDNtmdxeSNoT9Gcw7t6tGl/view?usp=sharing) and place it at ./data/TACoS/feature/
 
 4. (optional) modify json file in config folder for experimental setting
 
-5. `python main.py`
+5. `python main.py --config-path ./config/TACoS.json`
+
+
+
+For huge size of ActivityNet video features, we can't place it on Google Drive. You can download the videos [here](http://activity-net.org/download.html) and extract c3d feature using ./data/c3d.py

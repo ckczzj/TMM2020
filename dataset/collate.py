@@ -56,13 +56,4 @@ def collate(batch):
     start_gt=torch.stack(start_gt)
     end_gt=torch.stack(end_gt)
 
-    # print(video.shape)
-    # print(video_mask.shape)
-    # print(sentence.shape)
-    # print(sentence_mask.shape)
-    # print(gt.shape)
-    # print(box)
-    # print(box.shape)
-    # print("fuck")
-
     return video,video_mask,sentence,sentence_mask,gt,box,start_gt,end_gt

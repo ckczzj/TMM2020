@@ -1,11 +1,15 @@
 {
   "dataset": "ActivityNet",
+  "feature_path": "./data/ActivityNet/feature",
+  "train_json": "./data/ActivityNet/train_data.json",
+  "test_json": "./data/ActivityNet/test_data.json",
+  "word2vec_path": "./data/glove.bin",
   "gpu": "3",
   "num_workers": 5,
   "display_n_batches": 50,
 
   "save_model": false,
-  "model_save_path": "./save/",
+  "model_save_path": "./save/ActivityNet/",
   "use_pre_train_primary": false,
   "max_word_num": 20,
   "max_frame_num": 200,

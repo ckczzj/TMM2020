@@ -6,7 +6,7 @@ from runner import Runner
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--config-path', type=str, default="./config/ActivityNet.json")
+    parser.add_argument('--config-path', type=str, default="./config/TACoS.json")
     return parser.parse_args()
 
 def main(args):
