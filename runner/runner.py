@@ -33,7 +33,7 @@ class Runner:
 
     def _get_dataset(self):
         word2vec = load_word2vec(self.config["word2vec_path"])
-        if self.config["dataset"] == 'ActivityNet':
+        if self.config["dataset"] == "ActivityNet":
             train=ActivityNet(
                 self.config["feature_path"],
                 self.config["train_json"],
@@ -48,7 +48,7 @@ class Runner:
                 max_frame_num=self.config["max_frame_num"],
                 max_word_num=self.config["max_word_num"]
             )
-        elif self.config["dataset"] == 'TACoS':
+        elif self.config["dataset"] == "TACoS":
             train=TACoS(
                 self.config["feature_path"],
                 self.config["train_json"],
@@ -77,20 +77,16 @@ class Runner:
 
     def _build_model(self):
         if self.config["use_pre_train_primary"]:
-            self.primary=torch.load(self.config["model_save_path"]+self.config["dataset"]+'-pre-train-model.pth').cuda()
+            self.primary=torch.load(os.path.join(self.config["model_save_path"],"pre-train-model.pth")).cuda()
         else:
             self.primary = Primary(self.config).cuda()
         self.auxiliary = Auxiliary(self.config).cuda()
-        # print(self.model)
-        # device_ids = [0]
-        # self.model = self.model.to(torch.device('cuda:%d' % device_ids[0]))
-        # self.model = torch.nn.DataParallel(self.model, device_ids=device_ids)
 
     def _build_optimizer(self):
         pre_train_parser = argparse.ArgumentParser()
-        pre_train_parser.add_argument('--lr', type=float, default=self.config["pre_train_lr"], help='')
-        pre_train_parser.add_argument('--warmup-updates', type=int, default=self.config["pre_train_warmup_updates"], help='')
-        pre_train_parser.add_argument('--warmup-init-lr', type=float, default=self.config["pre_train_warmup_init_lr"], help='')
+        pre_train_parser.add_argument("--lr", type=float, default=self.config["pre_train_lr"], help="")
+        pre_train_parser.add_argument("--warmup-updates", type=int, default=self.config["pre_train_warmup_updates"], help="")
+        pre_train_parser.add_argument("--warmup-init-lr", type=float, default=self.config["pre_train_warmup_init_lr"], help="")
         FairseqAdam.add_args(pre_train_parser)
         pre_train_args=pre_train_parser.parse_args()
         self.pre_train_optimizer = FairseqAdam(pre_train_args, self.primary.parameters())
@@ -98,9 +94,9 @@ class Runner:
         # self.pre_train_optimizer = Adam(self.primary.parameters(),lr=1e-4)
 
         generator_parser = argparse.ArgumentParser()
-        generator_parser.add_argument('--lr', type=float, default=self.config["generator_lr"], help='')
-        generator_parser.add_argument('--warmup-updates', type=int, default=self.config["generator_warmup_updates"], help='')
-        generator_parser.add_argument('--warmup-init-lr', type=float, default=self.config["generator_warmup_init_lr"], help='')
+        generator_parser.add_argument("--lr", type=float, default=self.config["generator_lr"], help="")
+        generator_parser.add_argument("--warmup-updates", type=int, default=self.config["generator_warmup_updates"], help="")
+        generator_parser.add_argument("--warmup-init-lr", type=float, default=self.config["generator_warmup_init_lr"], help="")
         FairseqAdam.add_args(generator_parser)
         generator_args=generator_parser.parse_args()
         self.generator_optimizer = FairseqAdam(generator_args,self.primary.parameters())
@@ -108,9 +104,9 @@ class Runner:
 
 
         discriminator_parser = argparse.ArgumentParser()
-        discriminator_parser.add_argument('--lr', type=float, default=self.config["discriminator_lr"], help='')
-        discriminator_parser.add_argument('--warmup-updates', type=int, default=self.config["discriminator_warmup_updates"], help='')
-        discriminator_parser.add_argument('--warmup-init-lr', type=float, default=self.config["discriminator_warmup_init_lr"], help='')
+        discriminator_parser.add_argument("--lr", type=float, default=self.config["discriminator_lr"], help="")
+        discriminator_parser.add_argument("--warmup-updates", type=int, default=self.config["discriminator_warmup_updates"], help="")
+        discriminator_parser.add_argument("--warmup-init-lr", type=float, default=self.config["discriminator_warmup_init_lr"], help="")
         FairseqAdam.add_args(discriminator_parser)
         discriminator_args=discriminator_parser.parse_args()
         self.discriminator_optimizer = FairseqAdam(discriminator_args,list(self.auxiliary.parameters()))
@@ -118,25 +114,25 @@ class Runner:
 
     def train(self):
         if not self.config["use_pre_train_primary"]:
-            logging.info('Pre-train')
+            logging.info("Pre-train")
             for epoch in range(1, self.config["pre_train_epoch_num"] + 1):
-                logging.info('Start pre-train Epoch {}'.format(epoch))
+                logging.info("Start pre-train Epoch {}".format(epoch))
                 self._pre_train_one_epoch(epoch)
                 self.eval()
                 if self.config["save_model"]:
-                    torch.save(self.primary,self.config["model_save_path"]+'-pre-train-model-'+str(epoch)+'.pth')
+                    torch.save(self.primary,os.path.join(self.config["model_save_path"],"pre-train-model-"+str(epoch)+".pth"))
 
         else:
-            logging.info('pre-train eval')
+            logging.info("pre-train eval")
             self.eval()
-            logging.info('adversarial')
+            logging.info("adversarial")
             for epoch in range(1, self.config["adversarial_epoch_num"] + 1):
-                logging.info('Start Adversarial Epoch {}'.format(epoch))
+                logging.info("Start Adversarial Epoch {}".format(epoch))
                 self._adversarial_one_epoch(epoch)
                 if epoch>self.config["pre_train_dis_epoch_num"]:
                     self.eval()
 
-        logging.info('Done.')
+        logging.info("Done.")
 
     def _adversarial_one_epoch(self,epoch):
         self.primary.train()
@@ -177,36 +173,18 @@ class Runner:
                 self.gen_num_updates+=1
                 self.generator_lr_scheduler.step_update(self.gen_num_updates)
 
-            # if batch_id % self.config["d_every==0:
-            #     self.generator_optimizer.zero_grad()
-            #     self.discriminator_optimizer.zero_grad()
-            #     video_feature,sentence_feature,p,loss_se,loss_loc,_,_=self.primary(video.cuda(),video_mask.cuda(),sentence.cuda(),sentence_mask.cuda(),gt.cuda(),start_gt.cuda(),end_gt.cuda())
-            #     loss_aux,loss_dis=self.auxiliary(video_feature,sentence_feature,sentence_mask.cuda(),p,gt.cuda())
-            #     loss_dis=loss_dis.mean()
-            #     loss_dis.backward()
-            #     self.discriminator_optimizer.step()
-            #
-            # if batch_id % self.config["g_every==0:
-            #     self.generator_optimizer.zero_grad()
-            #     self.discriminator_optimizer.zero_grad()
-            #     video_feature,sentence_feature,p,loss_se,loss_loc,_,_=self.primary(video.cuda(),video_mask.cuda(),sentence.cuda(),sentence_mask.cuda(),gt.cuda(),start_gt.cuda(),end_gt.cuda())
-            #     loss_aux,_=self.auxiliary(video_feature,sentence_feature,sentence_mask.cuda(),p,gt.cuda())
-            #     loss_gen=self.config["alpha*loss_se+self.config["beta*loss_loc+self.config["gamma*loss_aux
-            #     loss_gen=loss_gen.mean()
-            #     loss_gen.backward()
-            #     self.generator_optimizer.step()
 
             time_meter.update()
 
 
             if batch_id % self.config["display_n_batches"] == 0:
                 if epoch<=self.config["pre_train_dis_epoch_num"]:
-                    logging.info('Adversarial Epoch %d, Dis_loss %.4f, Batch %d, %.3f seconds/batch' % (
+                    logging.info("Adversarial Epoch %d, Dis_loss %.4f, Batch %d, %.3f seconds/batch" % (
                         epoch, loss_dis_meter.avg, batch_id, 1.0 / time_meter.avg
                     ))
                     loss_dis_meter.reset()
                 else:
-                    logging.info('Adversarial Epoch %d, Batch %d, %.3f seconds/batch' % (
+                    logging.info("Adversarial Epoch %d, Batch %d, %.3f seconds/batch" % (
                         epoch, batch_id, 1.0 / time_meter.avg
                     ))
                     loss_dis_meter.reset()
@@ -217,8 +195,6 @@ class Runner:
         loss_meter = AverageMeter()
         time_meter = TimeMeter()
         for batch_id,(video,video_mask,sentence,sentence_mask,gt,box,start_gt,end_gt) in enumerate(self.train_loader, 1):
-            # self.pre_train_optimizer.zero_grad()
-
             self.pre_train_optimizer.zero_grad()
 
             _,_,_,loss_se,loss_loc,_,_,_,_ = self.primary(video.cuda(),video_mask.cuda(),sentence.cuda(),sentence_mask.cuda(),gt.cuda(),start_gt.cuda(),end_gt.cuda())
@@ -239,13 +215,8 @@ class Runner:
             loss_meter.update(loss.item())
             time_meter.update()
 
-            # if batch_id % self.config["display_n_batches == 0:
-            #     logging.info('pre_train Epoch %d, Batch %d, loss = %.4f, %.3f seconds/batch' % (
-            #         epoch, batch_id, loss_meter.avg, 1.0 / time_meter.avg
-            #     ))
-            #     loss_meter.reset()
             if batch_id % self.config["display_n_batches"] == 0:
-                logging.info('Pre-train Epoch %d, Batch %d, loss = %.4f, lr = %.6f, %.3f seconds/batch' % (
+                logging.info("Pre-train Epoch %d, Batch %d, loss = %.4f, lr = %.6f, %.3f seconds/batch" % (
                     epoch, batch_id, loss_meter.avg, curr_lr, 1.0 / time_meter.avg
                 ))
                 loss_meter.reset()
@@ -276,12 +247,12 @@ class Runner:
 
                     IoUs = criteria.calculate_IoU_batch((predict_start, predict_end),
                                                         (box_start, box_end))
-                    meters['mIoU'].update(np.mean(IoUs), IoUs.shape[0])
+                    meters["mIoU"].update(np.mean(IoUs), IoUs.shape[0])
                     for i in range(1, 8, 2):
-                        meters['IoU@0.%d' % i].update(np.mean(IoUs >= (i / 10)), IoUs.shape[0])
+                        meters["IoU@0.%d" % i].update(np.mean(IoUs >= (i / 10)), IoUs.shape[0])
                 # all val or test metric
-                print('| ')
+                print("| ")
                 for key, value in meters.items():
-                    print('{}, {:.4f}'.format(key, value.avg), end=' | ')
+                    print("{}, {:.4f}".format(key, value.avg), end=" | ")
                     meters[key].reset()
-                print('\n| ')
+                print("\n| ")
