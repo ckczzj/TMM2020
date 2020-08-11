@@ -27,4 +27,4 @@ code for ***Temporal Textual Localization in Video via Adversarial Bi-Directiona
 
 
 
-For huge size of ActivityNet video features, we can't place it on Google Drive. You can download the videos [here](http://activity-net.org/download.html) and extract c3d feature using ./data/c3d.py
+Because of huge size of ActivityNet video features, we can't place it on Google Drive. You can download the videos [here](http://activity-net.org/download.html) and extract their c3d feature using ./data/c3d.py
