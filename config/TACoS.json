@@ -1,8 +1,8 @@
 {
   "dataset": "TACoS",
   "feature_path": "./data/TACoS/feature",
-  "train_json": "./data/TACOS/train_data.json",
-  "test_json": "./data/TACOS/test_data.json",
+  "train_json": "./data/TACoS/train_data.json",
+  "test_json": "./data/TACoS/test_data.json",
   "word2vec_path": "./data/glove.bin",
   "gpu": "3",
   "num_workers": 5,
