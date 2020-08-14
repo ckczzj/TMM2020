@@ -4,7 +4,7 @@
   "train_json": "./data/TACoS/train_data.json",
   "test_json": "./data/TACoS/test_data.json",
   "word2vec_path": "./data/glove.bin",
-  "gpu": "3",
+  "gpu": "0",
   "num_workers": 5,
   "display_n_batches": 30,
 
@@ -30,7 +30,7 @@
   "nu": 5.0,
 
   "pre_train_lr": [0.0018],
-  "pre_train_warmup_updates": 600,
+  "pre_train_warmup_updates": 750,
   "pre_train_warmup_init_lr": 0.00005,
 
   "generator_lr": [6e-8],

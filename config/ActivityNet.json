@@ -4,7 +4,7 @@
   "train_json": "./data/ActivityNet/train_data.json",
   "test_json": "./data/ActivityNet/test_data.json",
   "word2vec_path": "./data/glove.bin",
-  "gpu": "3",
+  "gpu": "0",
   "num_workers": 5,
   "display_n_batches": 50,
 
@@ -30,8 +30,8 @@
   "nu": 5.0,
 
   "pre_train_lr": [0.0012],
-  "pre_train_warmup_updates": 1200,
-  "pre_train_warmup_init_lr": 0.0005,
+  "pre_train_warmup_updates": 1000,
+  "pre_train_warmup_init_lr": 0.0003,
 
   "generator_lr": [6e-8],
   "generator_warmup_updates": 1200,
