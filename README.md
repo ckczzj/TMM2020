@@ -1,7 +1,7 @@
 # Temporal Textual Localization in Video via Adversarial Bi-Directional Interaction Networks
 code for ***Temporal Textual Localization in Video via Adversarial Bi-Directional Interaction Networks***，which is accepted by IEEE Transactions on Multimedia 2020.
 
-[paper](https://google.com/ncr)
+[paper](https://doi.org/10.1109/TMM.2020.3023339)
 
 
 
